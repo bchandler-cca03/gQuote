@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "WhatIsAchieved";
+}
+
+
+<div class="container">
+    <div class="col-md-4">
+        <h2>What Is Achieved</h2>
+
+        <p>
+            This tool takes the GTT Off-Net Address List
+            and makes it available in a MVC format.
+        </p>
+        <p>
+            Further, the SearchPage function allows
+            10 records to be initially pulled. Paging is
+            implemented with a forward/back arrow.
+        </p>
+
+        <p>
+            In the event that the user's original query did
+            not have certain fields populated, the web-front-end
+            uses logic to stuff in dummy variables into the link.
+        </p>
+        <p>
+            Example dummy variables are '99999' for a zip-code.  Once
+            received by the controller, the controller checks and if such
+            dummy variables are includes, they are removed and the original
+            blank for the appropriate field is recreated before the query
+            is sent to the database.
+        </p>
+    </div>
+</div>

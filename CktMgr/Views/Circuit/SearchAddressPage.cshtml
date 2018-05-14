@@ -1,0 +1,48 @@
+﻿@model CktMgr.Models.SearchViewModel
+
+@{
+    ViewData["Title"] = "SearchAddressPage";
+}
+
+<h2>SearchAddressPage</h2>
+
+<h4>Circuit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SearchAddressPageReturn">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="PageNumber" type="hidden" class="form-control" value="1"/>
+            <div class="form-group">
+                <label asp-for="SearchModel.Address" class="control-label"></label>
+                <input asp-for="SearchModel.Address" class="form-control" />
+                <span asp-validation-for="SearchModel.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SearchModel.City" class="control-label"></label>
+                <input asp-for="SearchModel.City" class="form-control" />
+                <span asp-validation-for="SearchModel.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SearchModel.State" class="control-label"></label>
+                <input asp-for="SearchModel.State" class="form-control" />
+                <span asp-validation-for="SearchModel.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SearchModel.Zip" class="control-label"></label>
+                <input asp-for="SearchModel.Zip" class="form-control" />
+                <span asp-validation-for="SearchModel.Zip" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

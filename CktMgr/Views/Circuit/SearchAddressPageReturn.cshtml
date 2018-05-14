@@ -1,0 +1,133 @@
+﻿@model SearchViewModel
+
+
+@{
+    ViewData["Title"] = "SearchAddressPageReturn";
+
+}
+
+<h2>SearchAddressPageReturn</h2>
+<h6>Page Number is @Model.PageNumber</h6>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                City
+            </th>
+            <th>
+                State
+            </th>
+            <th>
+                Zip
+            </th>
+            <th>
+                DeliveryMethod
+            </th>
+            <th>
+                Speed
+            </th>
+            <th>
+                Term
+            </th>
+            <th>
+                MRR
+            </th>
+            <th>
+                NRR
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Circuits)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Zip)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryMethod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Speed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Term)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MRR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NRR)
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination">
+        @{ 
+            var prevId = Model.PageNumber > 2 ? Model.PageNumber - 1 : 1;
+            var nextId = Model.PageNumber + 1;
+            string prevDisabled = Model.PageNumber == 1 ? "disabled" : "";
+            // var AddressX = Model.SearchModel.Address;
+            // var CityX = Model.SearchModel.City;
+            // var StateX = Model.SearchModel.State;
+            // var ZipX = Model.SearchModel.Zip;
+            bool isAddressEmpty = String.IsNullOrEmpty(Model.SearchModel.Address);
+            bool isCityEmpty = String.IsNullOrEmpty(Model.SearchModel.City);
+            bool isStateEmpty = String.IsNullOrEmpty(Model.SearchModel.State);
+            bool isZipEmpty = String.IsNullOrEmpty(Model.SearchModel.Zip);
+
+            var AddressX = isAddressEmpty ? "ASDFJKL" : Model.SearchModel.Address;
+            var CityX = isCityEmpty ? "ASDFJKL" : Model.SearchModel.City;
+            var StateX = isStateEmpty ? "ASDFJKL" : Model.SearchModel.State;
+            var ZipX = isZipEmpty ? "99999" : Model.SearchModel.Zip;
+
+            var PageNum = Model.PageNumber;
+        }
+
+
+        <li class="@prevDisabled">
+            <a asp-controller="Circuit" asp-action="SearchAddressPageReturn2"
+               asp-route-Address="@AddressX"
+               asp-route-City="@CityX"
+               asp-route-State="@StateX"
+               asp-route-Zip = "@ZipX"
+               asp-route-PageNumber = "@prevId">
+                <span aria-hidden="true">&laquo</span>
+            </a>
+        </li>
+        <li>
+            <a asp-controller="Circuit" asp-action="SearchAddressPageReturn2"
+               asp-route-Address="@AddressX"
+               asp-route-City="@CityX"
+               asp-route-State="@StateX"
+               asp-route-Zip="@ZipX"
+               asp-route-PageNumber = "@nextId">
+                <span aria-hidden="true">&raquo</span>
+            </a>
+        </li>
+    </ul>
+
+</nav>
+
