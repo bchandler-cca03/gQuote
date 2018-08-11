@@ -12,7 +12,12 @@
     <div class="col-md-4">
         <form asp-action="SearchAddressPageReturn">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="PageNumber" type="hidden" class="form-control" value="1"/>
+            <input asp-for="PageNumber" type="hidden" class="form-control" value="1" />
+            <div class="form-group">
+                <label asp-for="SearchModel.Speed" class="control-label"></label>
+                <input asp-for="SearchModel.Speed" class="form-control" />
+                <span asp-validation-for="SearchModel.Speed" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="SearchModel.Address" class="control-label"></label>
                 <input asp-for="SearchModel.Address" class="form-control" />

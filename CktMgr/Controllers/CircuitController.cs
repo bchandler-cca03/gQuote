@@ -7,19 +7,26 @@ using CktMgr.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CktMgr.Controllers
 {
-    [Authorize(Policy = "AuthorizedUser")]  // makes the user have the claim Authorized User
+    // makes the user have the claim Authorized User
+    [Authorize(Policy = "AuthorizedUser")]  
     public class CircuitController : Controller
     {
         private ICircuitRepo _cktRepo;
 
+        //---- adding logging ---
+        private readonly ILogger _logger;
+
         public int Address { get; private set; }
 
-        public CircuitController(ICircuitRepo cktRepo)
+        public CircuitController(ICircuitRepo cktRepo, ILogger<CircuitController> logger)
         {
             _cktRepo = cktRepo;
+            _logger = logger;
+
         }
 
         // GET: Circuit
@@ -56,6 +63,10 @@ namespace CktMgr.Controllers
 
             {
                 List<Circuit> returnResults = new List<Circuit>();
+
+                // adding line about logging immediately below
+               //  _logger.LogInformation($"User asking to Search{modelToSearch}");
+
                 returnResults = _cktRepo.SearchAddress(modelToSearch);
 
                 return View("SearchReturn", returnResults);
@@ -83,6 +94,7 @@ namespace CktMgr.Controllers
             // modelToPass.State = State;
             // modelToPass.Zip = Zip;
 
+            // ZZZ-Return To modelToPass.Speed = (Speed == "N") ? "" : Speed;
             modelToPass.Address = (Address == "ASDFJKL") ? "" : Address;
             modelToPass.City = (City == "ASDFJKL") ? "" : City;
             modelToPass.State = (State == "ASDFJKL") ? "" : State;
@@ -132,12 +144,14 @@ namespace CktMgr.Controllers
                 viewModel.Circuits = returnResults;
                 viewModel.PageNumber = PageNumber;
                 viewModel.SearchModel = modelToSearch.SearchModel;
+                
                 // alternative was to add returnResults to modelToSearch
 
                 return View("SearchAddressPageReturn", viewModel);
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine($"Error Message:  {ex.Message}");
                 return View();  // returns view at not Implemented exception
             }
         }

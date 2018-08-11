@@ -13,6 +13,12 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Vendor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Region)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
@@ -25,19 +31,20 @@
                 @Html.DisplayNameFor(model => model.Zip)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeliveryMethod)
+                @Html.DisplayNameFor(model => model.Interface)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Speed)
             </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.Term)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MRR)
+                @Html.DisplayNameFor(model => model.MRC)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NRR)
+                @Html.DisplayNameFor(model => model.NRC)
             </th>
 
             <th></th>
@@ -51,6 +58,14 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Vendor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Region)
+            </td>
+
+
+            <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
@@ -63,7 +78,7 @@
                 @Html.DisplayFor(modelItem => item.Zip)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeliveryMethod)
+                @Html.DisplayFor(modelItem => item.Interface)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Speed)
@@ -72,10 +87,10 @@
                 @Html.DisplayFor(modelItem => item.Term)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MRR)
+                @Html.DisplayFor(modelItem => item.MRC)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NRR)
+                @Html.DisplayFor(modelItem => item.NRC)
             </td>
 
 

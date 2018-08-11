@@ -30,15 +30,16 @@ namespace CktMgr.Controllers
             {
                 Id = 0,
                 // Address = "101 7th Avenue SE",
+                Vendor = "AT&T",
                 Address = " 7th Avenue SE",
                 City = "New York",
                 State = "NY",
                 Zip = "10101",
-                DeliveryMethod = "Fiber",
+                Interface = "Fiber",
                 Speed = "100",
-                Term = "12",
-                MRR = "$1000",
-                NRR = "$500"
+                MRC = "$1000",
+                NRC = "$500",
+                Term = "12"
             };
 
             //_circuitRepo.AddCircuit(newCircuit);
@@ -47,13 +48,13 @@ namespace CktMgr.Controllers
         [Authorize]  // Authorize means you have a login
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Billy 'The Eliminator' Gibbons";
+            ViewData["Message"] = "Billy 'The ETL Eliminator' Gibbons";
 
             return View();
         }
         public IActionResult WhatIsHFC()
         {
-            ViewData["Message"] = "Billy 'The Eliminator' Gibbons";
+            ViewData["Message"] = "Billy 'The ETL Eliminator' Gibbons";
 
             return View();
         }

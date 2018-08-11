@@ -16,6 +16,12 @@
                 Id
             </th>
             <th>
+                Vendor
+            </th>
+            <th>
+                Region
+            </th>
+            <th>
                 Address
             </th>
             <th>
@@ -28,20 +34,21 @@
                 Zip
             </th>
             <th>
-                DeliveryMethod
+                Interface
             </th>
             <th>
                 Speed
             </th>
             <th>
+                MRC
+            </th>
+            <th>
+                NRC
+            </th>
+            <th>
                 Term
             </th>
-            <th>
-                MRR
-            </th>
-            <th>
-                NRR
-            </th>
+
         </tr>
     </thead>
     <tbody>
@@ -51,6 +58,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vendor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Region)
+            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
@@ -64,21 +78,20 @@
                 @Html.DisplayFor(modelItem => item.Zip)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeliveryMethod)
+                @Html.DisplayFor(modelItem => item.Interface)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Speed)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.MRC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NRC)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Term)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MRR)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NRR)
-            </td>
-
         </tr>
         }
     </tbody>

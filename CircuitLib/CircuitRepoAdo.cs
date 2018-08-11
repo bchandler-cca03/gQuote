@@ -3,21 +3,34 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 
+
 namespace CktMgr.CircuitLib
 {
+    
     public class CircuitRepoAdo : ICircuitRepo
     {
-        private const string connStr = "Server=(localdb)\\mssqllocaldb;Database=gQuote;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        private const string selectQuery = "Select Top 100 *\n" +
-            "FROM MainCircuits\n";
 
-        // public string addressClause = "Where Address LIKE '%@address%' \n";
-        // private string cityClause = "And City Like '%@city%' ";
-        // private string stateClause = "And State Like '%@state%' ";
-        // private string zipClause = "And Zip Like '%@zip%'";
 
-        private string searchClause1 = "Where Address Like @Address And City Like @City And State Like @State And Zip Like @Zip";
+        // private const string connStr = "Server=(localDB)\\gQuote;Database=gQuote;Integrated Security=True;MultipleActiveResultSets=true";
+        // private const string connStr = "Data Source = CROWTHERS-GQUOT;Initial Catalog = gQuote; Integrated Security = True";
+
+        // -- string below worked on IIS
+        private const string connStr = "Server=.;Database=gQuote;Integrated Security=True;MultipleActiveResultSets=true";
+        //private const string connStr = "Server=(CROWTHERS-GQUOT)\\mssqllocaldb;Database=gQuote;Trusted_Connection=True;MultipleActiveResultSets=true";
+        //private const string connStr = "Server=(localdb)\\CROWTHERS-GQUOT;Database=gQuote;MultipleActiveResultSets=true";
+        //private const string connStr = "Server=CROWTHERS-GQUOT\\CROWTHERS-GQUOT;Database=gQuote;Integrated Security=True;MultipleActiveResultSets=true";
+        //private const string connStr = "Server=(localdb)\\mssqllocaldb;Database=gQuote;IntegratedSecurity=True;MultipleActiveResultSets=true";
+        // -- private const string connStr = "Server=(CROWTHERS-GQUOT)\\mssqllocaldb;Database=gQuote;Trusted_Connection=True;MultipleActiveResultSets=true";
+        // private const string connStr = "Data Source=CROWTHERS-GOUT\\CROWTHERS-GOUT;Initial Catalog=gQuote;Integrated Security=True;MultipleActiveResultSets=True";
+        private const string selectQuery = "Select Top 100 *\n" + "From Massive2\n";
+            
+            // "From TotalATT\n";
+            // "FROM MainCircuits\n";
+
+
+        // Search clause for Search route
+        private string searchClause1 = "Where Speed = @Speed And Address Like @Address And City Like @City And State Like @State And Zip Like @Zip";
 
         private string pagingSearch = "Select Top 10 * From\n" +
                                       "(SELECT TOP 10 * From\n" +
@@ -28,11 +41,16 @@ namespace CktMgr.CircuitLib
         //                               "ORDER BY Id ASC) As Table1\n"+
         //                               "ORDER BY Id DESC) AS Table2\n"+
         //                               "ORDER BY Address ASC";
-        private string pagingSearch2 = " * From MainCircuits " +
-                              "Where Address Like @Address And City Like @City And State Like @State And Zip Like @Zip\n" +
-                              "ORDER BY Id ASC) As Table1\n" +
-                              "ORDER BY Id DESC) AS Table2\n" +
-                              "ORDER BY Address ASC";
+        
+        // private string pagingSearch2 = " * From MainCircuits " +  
+        private string pagingSearch2 = " * From Massive2 " +   
+                      "Where Speed Like @Speed And Address Like @Address And City Like @City And State Like @State And Zip Like @Zip\n" +
+                      "ORDER BY Id ASC) As Table1\n" +
+                      "ORDER BY Id DESC) AS Table2\n" +
+                      "ORDER BY Address ASC";
+
+        // Article Reference for WaitForDelay
+        // https:  //msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout(v=vs.110).aspx
 
         // Reference Clause
         // Select Top 10 * From
@@ -42,9 +60,6 @@ namespace CktMgr.CircuitLib
         // ORDER BY Id ASC) AS Table1
         // ORDER By Id DESC) AS Table2
         // Order By Id ASC
-
-
-
 
         // private string addressClause2 = "@Address";
         // private string searchClause2 = "%' And City Like '%Macon%'";
@@ -56,6 +71,48 @@ namespace CktMgr.CircuitLib
         private const string selectByTier = "And Tier = '2'\n";
         private const string orderByName = "ORDER BY City asc, State asc\n";
         private const string whereId = "Where Id = @Id\n";
+
+        // -------- adding logging to the repo ---
+
+        public List<Circuit> GetCircuitsWithQuery(SqlConnection conn, SqlCommand command)
+        {
+            // referencing CircuitRepoAdoUtilities
+            // does this need to be static?  used static and don't have to instantiate an object
+            // CircuitRepoAdoUtilities.SayHello();
+
+            List<Circuit> _circuits = new List<Circuit>();
+            try
+            {
+
+                SqlDataReader reader = command.ExecuteReader(); // changed the order
+                while (reader.Read())
+                {
+                    Circuit newCircuit = new Circuit
+                    {
+                        Id = int.Parse(reader[0].ToString()),
+                        Vendor = reader[1].ToString(),
+                        Region = reader[2].ToString(),
+                        Address = reader[3].ToString(),
+                        City = reader[4].ToString(),
+                        State = reader[5].ToString(),
+                        Zip = reader[6].ToString(),
+                        Interface = reader[7].ToString(),
+                        Speed = reader[8].ToString(),
+                        MRC = reader[9].ToString(),
+                        NRC = reader[10].ToString(),
+                        Term = reader[11].ToString(),
+                    };
+                    _circuits.Add(newCircuit);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            return _circuits;
+        }
+
 
         public List<Circuit> ListAll()
         {
@@ -76,19 +133,17 @@ namespace CktMgr.CircuitLib
                         Circuit newCircuit = new Circuit
                         {
                             Id = int.Parse(reader[0].ToString()),
-                            Region = reader[1].ToString(),
-                            Address = reader[2].ToString(),
-                            City = reader[3].ToString(),
-                            State = reader[4].ToString(),
-                            Zip = reader[5].ToString(),
-                            LAT = reader[6].ToString(),
-                            LON = reader[7].ToString(),
-                            DeliveryMethod = reader[8].ToString(),
-                            Speed = reader[9].ToString(),
-                            Term = reader[10].ToString(),
-                            MRR = reader[11].ToString(),
-                            NRR = reader[12].ToString()
-
+                            Vendor = reader[1].ToString(),
+                            Region = reader[2].ToString(),
+                            Address = reader[3].ToString(),
+                            City = reader[4].ToString(),
+                            State = reader[5].ToString(),
+                            Zip = reader[6].ToString(),
+                            Interface = reader[7].ToString(),
+                            Speed = reader[8].ToString(),
+                            MRC = reader[9].ToString(),
+                            NRC = reader[10].ToString(),
+                            Term = reader[11].ToString(),
                         };
                         circuits.Add(newCircuit);
                     }
@@ -96,6 +151,7 @@ namespace CktMgr.CircuitLib
                 catch (Exception ex)
                 {
                     //TODO:  Log Errors
+                    Console.WriteLine(ex);
                     Console.WriteLine(ex.Message);
                     throw;
                 }
@@ -116,18 +172,17 @@ namespace CktMgr.CircuitLib
                     while (reader.Read())
                     {
                         circuitToDetail.Id = int.Parse(reader[0].ToString());
-                        circuitToDetail.Region = reader[1].ToString();
-                        circuitToDetail.Address = reader[2].ToString();
-                        circuitToDetail.City = reader[3].ToString();
-                        circuitToDetail.State = reader[4].ToString();
-                        circuitToDetail.Zip = reader[5].ToString();
-                        circuitToDetail.LAT = reader[6].ToString();
-                        circuitToDetail.LON = reader[7].ToString();
-                        circuitToDetail.DeliveryMethod = reader[8].ToString();
-                        circuitToDetail.Speed = reader[9].ToString();
-                        circuitToDetail.Term = reader[10].ToString();
-                        circuitToDetail.MRR = reader[11].ToString();
-                        circuitToDetail.NRR = reader[12].ToString();
+                        circuitToDetail.Vendor = reader[1].ToString();
+                        circuitToDetail.Region = reader[2].ToString();
+                        circuitToDetail.Address = reader[3].ToString();
+                        circuitToDetail.City = reader[4].ToString();
+                        circuitToDetail.State = reader[5].ToString();
+                        circuitToDetail.Zip = reader[6].ToString();
+                        circuitToDetail.Interface = reader[7].ToString();
+                        circuitToDetail.Speed = reader[8].ToString();
+                        circuitToDetail.MRC = reader[9].ToString();
+                        circuitToDetail.NRC = reader[10].ToString();
+                        circuitToDetail.Term = reader[11].ToString();
 
                     };
                 }
@@ -142,55 +197,65 @@ namespace CktMgr.CircuitLib
         }
         public List<Circuit> SearchAddress(SearchModel searchToComplete)
         {
+            // var speedString = "%" + (string)searchToComplete.Speed + "%";
+            var speedString = "";
+            if((string)searchToComplete.Speed != null)
+            {
+                speedString = (string)searchToComplete.Speed;
+            } 
+
             var addressString = "%"+ (string)searchToComplete.Address + "%";
             var cityString = "%" + (string)searchToComplete.City + "%";
             var stateString = "%" + (string)searchToComplete.State + "%";
             var zipString = "%" + (string)searchToComplete.Zip + "%";
 
             List<Circuit> circuits = new List<Circuit>();
+            var totalSelectSearch = selectQuery + searchClause1;
 
+
+
+            // using (SqlConnection conn = new SqlConnection(connStr))
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                SqlCommand command = new SqlCommand(selectQuery + searchClause1, conn);
+                SqlCommand command = new SqlCommand(totalSelectSearch, conn);
+                command.Parameters.AddWithValue("@Speed", speedString);
                 command.Parameters.AddWithValue("@Address", addressString);
                 command.Parameters.AddWithValue("@City", cityString);
                 command.Parameters.AddWithValue("@State", stateString);
                 command.Parameters.AddWithValue("@Zip", zipString);
+                command.CommandTimeout = 180;
 
+                // ZZZ insert GetCircuitsWithQuery Code
                 try
                 {
-                    conn.Open();
 
                     SqlDataReader reader = command.ExecuteReader(); // changed the order
-
                     while (reader.Read())
                     {
                         Circuit newCircuit = new Circuit
                         {
                             Id = int.Parse(reader[0].ToString()),
-                            Region = reader[1].ToString(),
-                            Address = reader[2].ToString(),
-                            City = reader[3].ToString(),
-                            State = reader[4].ToString(),
-                            Zip = reader[5].ToString(),
-                            LAT = reader[6].ToString(),
-                            LON = reader[7].ToString(),
-                            DeliveryMethod = reader[8].ToString(),
-                            Speed = reader[9].ToString(),
-                            Term = reader[10].ToString(),
-                            MRR = reader[11].ToString(),
-                            NRR = reader[12].ToString()
-
+                            Vendor = reader[1].ToString(),
+                            Region = reader[2].ToString(),
+                            Address = reader[3].ToString(),
+                            City = reader[4].ToString(),
+                            State = reader[5].ToString(),
+                            Zip = reader[6].ToString(),
+                            Interface = reader[7].ToString(),
+                            Speed = reader[8].ToString(),
+                            MRC = reader[9].ToString(),
+                            NRC = reader[10].ToString(),
+                            Term = reader[11].ToString(),
                         };
                         circuits.Add(newCircuit);
                     }
-
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     throw;
                 }
+
                 return circuits;
             }
         }
@@ -200,6 +265,14 @@ namespace CktMgr.CircuitLib
         {
             // On paging
             // ZZZ http:   //easyhtml5video.com/articles/bootstrap-pagination-demo-387.html
+            //  var speedString = "%" + (string)searchToComplete.Speed + "%";
+
+            var speedString = "";
+            if ((string)searchToComplete.Speed != null)
+            {
+                speedString = (string)searchToComplete.Speed;
+            }
+
             var addressString = "%" + (string)searchToComplete.Address + "%";
             var cityString = "%" + (string)searchToComplete.City + "%";
             var stateString = "%" + (string)searchToComplete.State + "%";
@@ -217,46 +290,19 @@ namespace CktMgr.CircuitLib
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+
                 SqlCommand command = new SqlCommand(pagingSearchTotal, conn);
+                command.Parameters.AddWithValue("@Speed", speedString);
                 command.Parameters.AddWithValue("@Address", addressString);
                 command.Parameters.AddWithValue("@City", cityString);
                 command.Parameters.AddWithValue("@State", stateString);
                 command.Parameters.AddWithValue("@Zip", zipString);
                 // command.Parameters.AddWithValue("@numToPull", numToPullString);
 
-                try
-                {
-                    conn.Open();
+                command.CommandTimeout = 180;
 
-                    SqlDataReader reader = command.ExecuteReader(); // changed the order
+                circuits = GetCircuitsWithQuery(conn, command);
 
-                    while (reader.Read())
-                    {
-                        Circuit newCircuit = new Circuit
-                        {
-                            Id = int.Parse(reader[0].ToString()),
-                            Region = reader[1].ToString(),
-                            Address = reader[2].ToString(),
-                            City = reader[3].ToString(),
-                            State = reader[4].ToString(),
-                            Zip = reader[5].ToString(),
-                            LAT = reader[6].ToString(),
-                            LON = reader[7].ToString(),
-                            DeliveryMethod = reader[8].ToString(),
-                            Speed = reader[9].ToString(),
-                            Term = reader[10].ToString(),
-                            MRR = reader[11].ToString(),
-                            NRR = reader[12].ToString()
-
-                        };
-                        circuits.Add(newCircuit);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    throw;
-                }
                 return circuits;
             }
         }
